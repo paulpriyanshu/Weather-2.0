@@ -80,17 +80,23 @@ function App() {
   <Background/>
     {/* <BasicInfo props={props}/> */}
     <div className="flex justify-center items-center h-screen">
-    <div style={{width:1500,height:1000,overflowWrap: 'break-word', wordWrap: 'break-word'}} className="relative todo-container z-50 bg-blue-700 opacity-80 rounded-3xl shadow-md overflow-hidden cursor-auto">
+    <div style={{width:1500,height:1000,overflowWrap: 'break-word', wordWrap: 'break-word'}} className="relative todo-container z-50  bg-gradient-to-r from-slate-400 to-transparent opacity-60 rounded-3xl shadow-md overflow-hidden cursor-auto">
     <div className="flex  justify-center m-5">
     <input  type='text' value={cityname} onKeyDown={weatherdata} onChange={weatherdata} placeholder="Search here" className="px-4 py-3 rounded-3xl outline-none w-1/3 "/> 
     </div>
-    <div className='m-10 absolute left-5'>
-    <BasicInfo props={props}/>
+    <div className="flex flex-wrap ">
+    <div className='m-10 absolute '>
+    <AdvInfo props={props}/>
     </div>
     
-    <div className='m-10 absolute bottom-56'>
-      <AdvInfo props={props}/>
+   
+    
+    <div className="m-10 absolute right-1/2 opacity-90 ">
+    <BasicInfo props={props}/>
     </div>
+    </div>
+    
+    
     
     </div>
     </div>
