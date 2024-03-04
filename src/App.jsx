@@ -44,7 +44,7 @@ function App() {
       setcityname(weatherjson.location.name+" , ")
       setcountry(weatherjson.location.country)
       settemp("Temperature : "+weatherjson.current.temp_c+" °C"+" / "+weatherjson.current.temp_f+" °F")
-      settime(weatherjson.current.last_updated)
+     
       console.log(weatherjson.location.name)
       setco("CO Amount : "+weatherjson.current.air_quality.co)
       setno2("NO2 Amount : "+weatherjson.current.air_quality.no2)
@@ -52,7 +52,20 @@ function App() {
       setso2("SO2 Amount : "+weatherjson.current.air_quality.so2)
       
         setair("AIR QUALITY")
+      const time =await fetch(`https://api.api-ninjas.com/v1/worldtime?city=${cityname}`,{
+        method:"GET",
+        headers:{
+          "X-Api-Key":"h2E9syL0K2QpZXryrvPu0A==pSv3PcGw6FJF9nkV"
+        }
       })
+     .then(async(time)=>{
+      
+        const timedata=await time.json()
+        settime(timedata.datetime)
+        console.log(timedata)
+     })
+    
+    })
      
       
       
