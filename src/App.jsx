@@ -9,6 +9,7 @@ import AdvInfo from './components/Cards/AdvInfo'
 
 function App() {
   const [cityname, setcityname]=useState("")
+  const [sendcityname, setsendcityname]=useState("")
   const [country, setcountry] = useState("")
   const [temp,settemp]=useState("")
   const [time,settime]=useState("")
@@ -17,8 +18,9 @@ function App() {
   const [o3,seto3]=useState("")
   const [so2,setso2]=useState("")
   const [air,setair]=useState("")
+  //setsendcityname(cityname)
   let props={
-    title:cityname,
+    title:sendcityname,
     description:country,
     temperature:temp,
     time:time,
@@ -33,7 +35,7 @@ function App() {
 
    const weatherdata=async(e)=>{
     
-    setcityname(e.target.value);
+    
     
     if (e.key ==="Enter") {
       let weather= await fetch(`http://api.weatherapi.com/v1/current.json?key=6e9cf1a3f144498d8d5180456232509 &q=${cityname}&aqi=yes`,)
@@ -41,7 +43,7 @@ function App() {
       const weatherjson=await weather.json()
 
       console.log(weatherjson)
-      setcityname(weatherjson.location.name+" , ")
+      setsendcityname(weatherjson.location.name+" , ")
       setcountry(weatherjson.location.country)
       settemp("Temperature : "+weatherjson.current.temp_c+" °C"+" / "+weatherjson.current.temp_f+" °F")
      
@@ -52,18 +54,21 @@ function App() {
       setso2("SO2 Amount : "+weatherjson.current.air_quality.so2)
       
         setair("AIR QUALITY")
-      const time =await fetch(`https://api.api-ninjas.com/v1/worldtime?city=${cityname}`,{
-        method:"GET",
-        headers:{
-          "X-Api-Key":"h2E9syL0K2QpZXryrvPu0A==pSv3PcGw6FJF9nkV"
-        }
-      })
-     .then(async(time)=>{
-      
-        const timedata=await time.json()
-        settime(timedata.datetime)
-        console.log(timedata)
-     })
+       
+          const time=await fetch(`https://api.api-ninjas.com/v1/worldtime?city=${cityname}`,{
+            method:"GET",
+            headers:{
+              "X-Api-Key":"h2E9syL0K2QpZXryrvPu0A==pSv3PcGw6FJF9nkV"
+            }
+          })
+         .then(async(time)=>{
+          
+            const timedata=await time.json()
+            settime(timedata.datetime)
+            console.log(timedata)
+         })
+         
+     
     
     })
      
@@ -76,6 +81,8 @@ function App() {
   
     
    }
+ 
+    //setInterval(gettime,100);
   //  useEffect(()=>{
   //   setcountry("");
   //   setcityname("")
@@ -93,18 +100,18 @@ function App() {
   <Background/>
     {/* <BasicInfo props={props}/> */}
     <div className="flex justify-center items-center h-screen">
-    <div style={{width:1500,height:1000,overflowWrap: 'break-word', wordWrap: 'break-word'}} className="relative todo-container z-50  bg-gradient-to-r from-slate-400 to-transparent opacity-60 rounded-3xl shadow-md overflow-hidden cursor-auto">
+    <div style={{width:1500,height:1000,overflowWrap: 'break-word', wordWrap: 'break-word'}} className="relative todo-container z-50 rounded-3xl shadow-md overflow-hidden cursor-auto">
     <div className="flex  justify-center m-5">
-    <input  type='text' value={cityname} onKeyDown={weatherdata} onChange={weatherdata} placeholder="Search here" className="px-4 py-3 rounded-3xl outline-none w-1/3 "/> 
+    <input  type='text' value={cityname} onKeyDown={weatherdata} onChange={(e)=>setcityname(e.target.value)} placeholder="Search here" className="px-4 py-3 opacity-80 rounded-3xl outline-none w-1/2 "/> 
     </div>
     <div className="flex flex-wrap ">
-    <div className='m-10 absolute '>
+    <div className='m-10 opacity-70 border border-blue-400'>
     <AdvInfo props={props}/>
     </div>
     
    
     
-    <div className="m-10 absolute right-1/2 opacity-90 ">
+    <div className="m-10 absolute right-1/2 opacity-70 ">
     <BasicInfo props={props}/>
     </div>
     </div>
