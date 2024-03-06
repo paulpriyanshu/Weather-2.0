@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 //import BasicInfo from './components/Cards/BasicInfo'
 
 import './App.css'
@@ -18,6 +18,12 @@ function App() {
   const [o3,seto3]=useState("")
   const [so2,setso2]=useState("")
   const [air,setair]=useState("")
+  const [date,setdate]=useState("")
+  let [count,setcount]=useState(0)
+  const [timeData, setTimeData] = useState({ hour: 0, minute: 0, second: 0 });
+  // let [hour,sethour]=useState(null)
+  // let [min,setmin]=useState(null)
+  // let [sec,setsec]=useState(null)
   //setsendcityname(cityname)
   let props={
     title:sendcityname,
@@ -28,16 +34,30 @@ function App() {
     co:co,
     no2:no2,
     o3:o3,
-    so2:so2
+    so2:so2,
+    // hour:hour,
+    // min:min,
+    // sec:sec
     
   }
 
-
-   const weatherdata=async(e)=>{
-    
-    
-    
+  const handlekewdown=(e)=>{
     if (e.key ==="Enter") {
+      stopLocalTimeInterval()
+      weatherdata()
+      gettime()
+
+  }
+
+  }
+  
+
+
+   const weatherdata=async()=>{
+    
+    
+    
+    
       let weather= await fetch(`http://api.weatherapi.com/v1/current.json?key=6e9cf1a3f144498d8d5180456232509 &q=${cityname}&aqi=yes`,)
       .then(async(weather)=>{
       const weatherjson=await weather.json()
@@ -54,34 +74,118 @@ function App() {
       setso2("SO2 Amount : "+weatherjson.current.air_quality.so2)
       
         setair("AIR QUALITY")
+        
+         
+        
+        
        
-          const time=await fetch(`https://api.api-ninjas.com/v1/worldtime?city=${cityname}`,{
-            method:"GET",
-            headers:{
-              "X-Api-Key":"h2E9syL0K2QpZXryrvPu0A==pSv3PcGw6FJF9nkV"
-            }
-          })
-         .then(async(time)=>{
-          
-            const timedata=await time.json()
-            settime(timedata.datetime)
-            console.log(timedata)
-         })
+         
          
      
-    
+         
     })
      
       
       
       //console.log(titles)
       // setquery(results);
-    }
+    
+   
      
   
     
    }
  
+
+const gettime=async()=>{
+  const time=await fetch(`https://api.api-ninjas.com/v1/worldtime?city=${cityname}`,{
+    method:"GET",
+    headers:{
+      "X-Api-Key":"ogeK1Mw8l/GH05zVLPiOYQ==yrEIVTml8tFQA4Qt"
+    }
+  })
+ .then(async(time)=>{
+    //clearInterval(increaseid)
+    setcount(count++)
+    const timedata=await time.json()
+    // sethour(parseInt(timeData.hour))
+    // setmin(parseInt(timeData.minute))
+    // setsec(parseInt(timeData.second))
+    setTimeData({
+      hour: parseInt(timedata.hour),
+      minute: parseInt(timedata.minute),
+      second: parseInt(timedata.second)
+  });
+    //console.log(hour)
+    //console.log(hour)
+    //console.log(hour+1)
+    //console.log(typeof(hour))
+    console.log(timedata)
+
+  incrementTime()
+// var increaseid=setInterval(incrementTime,1000)
+
+  // if(cityname){
+  //   clearInterval(increaseid)
+  // }
+ 
+// clearInterval(increaseid)
+  //Set interval to increment time every second
+  // const intervalId=setInterval(incrementTime, 1000);
+  // return () => clearInterval(intervalId);
+  
+ })
+}
+
+const intervals=useRef({})
+
+const incrementTime = () => {
+  // Update seconds
+  intervals.current=setInterval(() => {
+    setTimeData(prevTime => {
+      let updatedSecond = prevTime.second + 1;
+      let updatedMinute = prevTime.minute;
+      let updatedHour = prevTime.hour;
+  
+      if (updatedSecond === 60) {
+          updatedSecond = 0;
+          updatedMinute++;
+      }
+      if (updatedMinute === 60) {
+          updatedMinute = 0;
+          updatedHour++;
+      }
+      if (updatedHour === 24) {
+          updatedHour = 0;
+      }
+    // Update state with new time values
+    return {
+      hour: updatedHour,
+      minute: updatedMinute,
+      second: updatedSecond
+    };
+   
+    })
+  
+  }, 1000);
+  
+ 
+
+
+}
+const stopLocalTimeInterval = () => {
+  clearInterval(intervals.current);
+};
+
+
+
+
+
+
+
+//  useEffect(()=>{
+//   gettime()
+//  },[weatherdata])
     //setInterval(gettime,100);
   //  useEffect(()=>{
   //   setcountry("");
@@ -102,11 +206,11 @@ function App() {
     <div className="flex justify-center items-center h-screen">
     <div style={{width:1500,height:1000,overflowWrap: 'break-word', wordWrap: 'break-word'}} className="relative todo-container z-50 rounded-3xl shadow-md overflow-hidden cursor-auto">
     <div className="flex  justify-center m-5">
-    <input  type='text' value={cityname} onKeyDown={weatherdata} onChange={(e)=>setcityname(e.target.value)} placeholder="Search here" className="px-4 py-3 opacity-80 rounded-3xl outline-none w-1/2 "/> 
+    <input  type='text' value={cityname} onKeyDown={handlekewdown} onChange={(e)=>setcityname(e.target.value)} placeholder="Search here" className="px-4 py-3 opacity-80 rounded-3xl outline-none w-1/2 "/> 
     </div>
     <div className="flex flex-wrap ">
-    <div className='m-10 opacity-70 border border-blue-400'>
-    <AdvInfo props={props}/>
+    <div className='m-10 opacity-70'>
+    <AdvInfo props={timeData}/>
     </div>
     
    
