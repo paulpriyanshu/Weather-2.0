@@ -5,19 +5,19 @@ function Background() {
   const videoRef=useRef(null);
   useEffect(()=>{
     if(videoRef.current){
-    videoRef.current.playbackRate=0.5;
+    videoRef.current.playbackRate=0.25;
     }
   })
   const handleEnded = () => {
     // When the video ends, play it in reverse
     if (videoRef.current) {
-      videoRef.current.playbackRate = -0.5; // Reverse playback rate
+      videoRef.current.playbackRate = -0.25; // Reverse playback rate
       videoRef.current.currentTime = videoRef.current.duration;
       videoRef.current.play(); // Start playing in reverse
     }
   };
   return (
-    <div className="z-10 overflow-hidden fixed" >
+    <div className="w-full h-full z-10 overflow-hidden fixed" >
       {/* className="absolute inset-0 overflow-hidden z-0" */}
         {/* <div class="content">
        <h1>Welcome to My Website</h1>

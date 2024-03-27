@@ -5,6 +5,7 @@ import './App.css'
 import Background from './components/Bg/Background'
 import BasicInfo from './components/Cards/BasicInfo'
 import AdvInfo from './components/Cards/AdvInfo'
+import Suggestions from './components/Cards/Suggestions'
 //import Container from './components/Container/Container'
 
 function App() {
@@ -18,8 +19,10 @@ function App() {
   const [o3,seto3]=useState("")
   const [so2,setso2]=useState("")
   const [air,setair]=useState("")
-  const [date,setdate]=useState("")
+  const [day,setday]=useState("")
   let [count,setcount]=useState(0)
+  const [condition,setcondition]=useState("")
+
   const [timeData, setTimeData] = useState({ hour: 0, minute: 0, second: 0 });
   // let [hour,sethour]=useState(null)
   // let [min,setmin]=useState(null)
@@ -35,6 +38,8 @@ function App() {
     no2:no2,
     o3:o3,
     so2:so2,
+    day:day,
+    condition:condition
     // hour:hour,
     // min:min,
     // sec:sec
@@ -66,13 +71,13 @@ function App() {
       setsendcityname(weatherjson.location.name+" , ")
       setcountry(weatherjson.location.country)
       settemp("Temperature : "+weatherjson.current.temp_c+" °C"+" / "+weatherjson.current.temp_f+" °F")
-     
+      //setpic(weatherjson.condition.icon)
       console.log(weatherjson.location.name)
       setco("CO Amount : "+weatherjson.current.air_quality.co)
       setno2("NO2 Amount : "+weatherjson.current.air_quality.no2)
       seto3("O3 Amount : "+weatherjson.current.air_quality.o3)
       setso2("SO2 Amount : "+weatherjson.current.air_quality.so2)
-      
+      setcondition("Clouds : "+weatherjson.current.cloud)
         setair("AIR QUALITY")
         
          
@@ -105,12 +110,14 @@ const gettime=async()=>{
     }
   })
  .then(async(time)=>{
+
     //clearInterval(increaseid)
     setcount(count++)
     const timedata=await time.json()
     // sethour(parseInt(timeData.hour))
     // setmin(parseInt(timeData.minute))
     // setsec(parseInt(timeData.second))
+    setday(timedata.day_of_week)
     setTimeData({
       hour: parseInt(timedata.hour),
       minute: parseInt(timedata.minute),
@@ -203,26 +210,32 @@ const stopLocalTimeInterval = () => {
   <div>
   <Background/>
     {/* <BasicInfo props={props}/> */}
-    <div className="flex justify-center items-center h-screen">
-    <div style={{width:1500,height:1000,overflowWrap: 'break-word', wordWrap: 'break-word'}} className="relative todo-container z-50 rounded-3xl shadow-md overflow-hidden cursor-auto">
-    <div className="flex  justify-center m-5">
+    <div className="flex justify-center   relative top-20 z-50">
     <input  type='text' value={cityname} onKeyDown={handlekewdown} onChange={(e)=>setcityname(e.target.value)} placeholder="Search here" className="px-4 py-3 opacity-80 rounded-3xl outline-none w-1/2 "/> 
     </div>
-    <div className="flex flex-wrap ">
-    <div className='m-10 opacity-70'>
-    <AdvInfo props={timeData}/>
-    </div>
+    <div className="flex justify-center items-center  h-screen">
     
-   
+  
+  <div style={{overflowWrap: 'break-word', wordWrap: 'break-word'}} className=" w-2/4  h-3/4  relative todo-container z-50  opacity-90 rounded-3xl shadow-md  cursor-auto">
+
+        
+        <div className='m-5'>
+        
+            <AdvInfo props={timeData} />
+          
+       
+      </div>
+      <div className=" m-5 " >
+            <BasicInfo props={props} />
+        </div>
+      <div className='flex justify-end mr-6'>
+        <Suggestions props={props} />
+      </div>
+</div>
     
-    <div className="m-10 absolute right-1/2 opacity-70 ">
-    <BasicInfo props={props}/>
-    </div>
-    </div>
     
+
     
-    
-    </div>
     </div>
    
    
