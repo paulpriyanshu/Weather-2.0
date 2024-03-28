@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from 'react'
 //import BasicInfo from './components/Cards/BasicInfo'
-
+import 'dotenv'
 import './App.css'
 import Background from './components/Bg/Background'
 import BasicInfo from './components/Cards/BasicInfo'
@@ -22,7 +22,8 @@ function App() {
   const [day,setday]=useState("")
   let [count,setcount]=useState(0)
   const [condition,setcondition]=useState("")
-
+  const [aqi,setaqi]=useState("")
+  const [aqi2,setaqi2]=useState("")
   const [timeData, setTimeData] = useState({ hour: 0, minute: 0, second: 0 });
   // let [hour,sethour]=useState(null)
   // let [min,setmin]=useState(null)
@@ -39,7 +40,9 @@ function App() {
     o3:o3,
     so2:so2,
     day:day,
-    condition:condition
+    condition:condition,
+    aqi:aqi,
+    aqi2:aqi2,
     // hour:hour,
     // min:min,
     // sec:sec
@@ -63,22 +66,30 @@ function App() {
     
     
     
-      let weather= await fetch(`http://api.weatherapi.com/v1/current.json?key=6e9cf1a3f144498d8d5180456232509 &q=${cityname}&aqi=yes`,)
+      let weather= await fetch(`https://api.weatherapi.com/v1/current.json?key=6e9cf1a3f144498d8d5180456232509 &q=${cityname}&aqi=yes`,)
       .then(async(weather)=>{
       const weatherjson=await weather.json()
 
-      console.log(weatherjson)
+      //console.log(weatherjson)
       setsendcityname(weatherjson.location.name+" , ")
       setcountry(weatherjson.location.country)
       settemp("Temperature : "+weatherjson.current.temp_c+" °C"+" / "+weatherjson.current.temp_f+" °F")
       //setpic(weatherjson.condition.icon)
-      console.log(weatherjson.location.name)
+      //console.log(weatherjson.location.name)
       setco("CO Amount : "+weatherjson.current.air_quality.co)
       setno2("NO2 Amount : "+weatherjson.current.air_quality.no2)
       seto3("O3 Amount : "+weatherjson.current.air_quality.o3)
       setso2("SO2 Amount : "+weatherjson.current.air_quality.so2)
       setcondition("Clouds : "+weatherjson.current.cloud)
-        setair("AIR QUALITY")
+      setair("AIR QUALITY")
+      let air_quality=await fetch(`https://api.waqi.info/feed/${cityname}/?token=9ffbb7ddac4714acfdcc6fff47a4bff9d1d8b09a`)
+      .then(async(response)=>{
+        const air_quality_json = await response.json()
+        
+        setaqi(air_quality_json.data.aqi)
+        setaqi2("Air Condition : "+air_quality_json.data.aqi)
+        console.log(air_quality_json.data.aqi)
+      })
         
          
         
@@ -100,6 +111,7 @@ function App() {
   
     
    }
+  
  
 
 const gettime=async()=>{
@@ -127,7 +139,7 @@ const gettime=async()=>{
     //console.log(hour)
     //console.log(hour+1)
     //console.log(typeof(hour))
-    console.log(timedata)
+    //console.log(timedata)
 
   incrementTime()
 // var increaseid=setInterval(incrementTime,1000)
